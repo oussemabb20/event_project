@@ -1,0 +1,236 @@
+<div class="container py-4">
+  <h2 class="mb-4">Proposer un événement</h2>
+  
+  <form [formGroup]="eventForm" (ngSubmit)="onSubmit()">
+    <div class="row">
+      <!-- Title -->
+      <div class="col-md-6 mb-3">
+        <label for="title" class="form-label">Titre *</label>
+        <input 
+          type="text" 
+          class="form-control" 
+          id="title" 
+          formControlName="title"
+          [class.is-invalid]="eventForm.get('title')?.invalid && eventForm.get('title')?.touched">
+        <div class="invalid-feedback" *ngIf="eventForm.get('title')?.errors?.['required']">
+          Le titre est requis
+        </div>
+        <div class="invalid-feedback" *ngIf="eventForm.get('title')?.errors?.['minlength']">
+          Le titre doit contenir au moins 5 caractères
+        </div>
+        <div class="invalid-feedback" *ngIf="eventForm.get('title')?.errors?.['pattern']">
+          Le titre ne doit contenir que des lettres
+        </div>
+      </div>
+
+      <!-- Date -->
+      <div class="col-md-6 mb-3">
+        <label for="date" class="form-label">Date *</label>
+        <input 
+          type="date" 
+          class="form-control" 
+          id="date" 
+          formControlName="date"
+          [class.is-invalid]="eventForm.get('date')?.invalid && eventForm.get('date')?.touched">
+        <div class="invalid-feedback" *ngIf="eventForm.get('date')?.errors?.['required']">
+          La date de l'événement est requise
+        </div>
+        <div class="invalid-feedback" *ngIf="eventForm.get('date')?.errors?.['futureDateInvalid']">
+          {{ eventForm.get('date')?.errors?.['futureDateInvalid'] }}
+        </div>
+      </div>
+
+      <!-- Description -->
+      <div class="col-12 mb-3">
+        <label for="description" class="form-label">Description *</label>
+        <textarea 
+          class="form-control" 
+          id="description" 
+          rows="3" 
+          formControlName="description"
+          [class.is-invalid]="eventForm.get('description')?.invalid && eventForm.get('description')?.touched"></textarea>
+        <div class="invalid-feedback" *ngIf="eventForm.get('description')?.errors?.['required']">
+          La description est requise
+        </div>
+        <div class="invalid-feedback" *ngIf="eventForm.get('description')?.errors?.['minlength']">
+          La description doit contenir au moins 30 caractères
+        </div>
+      </div>
+
+      <!-- Location -->
+      <div class="col-md-6 mb-3">
+        <label for="location" class="form-label">Lieu *</label>
+        <input 
+          type="text" 
+          class="form-control" 
+          id="location" 
+          formControlName="location"
+          [class.is-invalid]="eventForm.get('location')?.invalid && eventForm.get('location')?.touched">
+        <div class="invalid-feedback" *ngIf="eventForm.get('location')?.errors?.['required']">
+          Le lieu de l'événement est requis
+        </div>
+      </div>
+
+      <!-- Price -->
+      <div class="col-md-6 mb-3">
+        <label for="price" class="form-label">Prix *</label>
+        <input 
+          type="text" 
+          class="form-control" 
+          id="price" 
+          formControlName="price"
+          [class.is-invalid]="eventForm.get('price')?.invalid && eventForm.get('price')?.touched">
+        <div class="invalid-feedback" *ngIf="eventForm.get('price')?.errors?.['required']">
+          Le prix est requis
+        </div>
+        <div class="invalid-feedback" *ngIf="eventForm.get('price')?.errors?.['pattern']">
+          Le prix doit contenir uniquement des chiffres et des points
+        </div>
+      </div>
+
+      <!-- Number of Places -->
+      <div class="col-md-6 mb-3">
+        <label for="nbPlaces" class="form-label">Nombre de places *</label>
+        <input 
+          type="text" 
+          class="form-control" 
+          id="nbPlaces" 
+          formControlName="nbPlaces"
+          [class.is-invalid]="eventForm.get('nbPlaces')?.invalid && eventForm.get('nbPlaces')?.touched">
+        <div class="invalid-feedback" *ngIf="eventForm.get('nbPlaces')?.errors?.['required']">
+          Le nombre de places est requis
+        </div>
+        <div class="invalid-feedback" *ngIf="eventForm.get('nbPlaces')?.errors?.['pattern']">
+          Le nombre de places doit être entre 1 et 100
+        </div>
+      </div>
+
+      <!-- Image URL -->
+      <div class="col-12 mb-3">
+        <label for="imageUrl" class="form-label">URL de l'image</label>
+        <input 
+          type="text" 
+          class="form-control" 
+          id="imageUrl" 
+          formControlName="imageUrl">
+      </div>
+
+      <!-- Domaines (FormArray) -->
+      <div class="col-12 mb-3">
+        <label class="form-label">Domaines</label>
+        <div formArrayName="domaines">
+          <div *ngFor="let domaine of domaines.controls; let i = index" class="mb-2">
+            <div class="input-group">
+              <input 
+                type="text" 
+                class="form-control" 
+                [formControlName]="i"
+                placeholder="Entrez un domaine"
+                [class.is-invalid]="domaines.at(i).invalid && domaines.at(i).touched">
+              <button 
+                type="button" 
+                class="btn btn-danger" 
+                (click)="removeDomaine(i)"
+                [disabled]="domaines.length === 1">
+                <i class="bi bi-trash"></i> Supprimer
+              </button>
+            </div>
+            <div class="invalid-feedback d-block" *ngIf="domaines.at(i).invalid && domaines.at(i).touched">
+              <div *ngIf="domaines.at(i).errors?.['required']">
+                Le domaine est requis
+              </div>
+              <div *ngIf="domaines.at(i).errors?.['minlength']">
+                Le domaine doit contenir au moins 3 caractères
+              </div>
+              <div *ngIf="domaines.at(i).errors?.['maxlength']">
+                Le domaine doit contenir au maximum 20 caractères
+              </div>
+            </div>
+          </div>
+        </div>
+        <button type="button" class="btn btn-secondary btn-sm mt-2" (click)="addDomain()">
+          <i class="bi bi-plus-circle"></i> Ajouter un domaine
+        </button>
+      </div>
+
+      <!-- Detailed Address (FormGroup) -->
+      <div class="col-12 mb-3">
+        <h5>Adresse détaillée</h5>
+        <div formGroupName="detailedAddress" class="row">
+          <!-- Avenue/Street -->
+          <div class="col-md-6 mb-3">
+            <label for="street" class="form-label">Avenue *</label>
+            <input 
+              type="text" 
+              class="form-control" 
+              id="street" 
+              formControlName="street"
+              placeholder="Avenue"
+              [class.is-invalid]="eventForm.get('detailedAddress.street')?.invalid && eventForm.get('detailedAddress.street')?.touched">
+            <div class="invalid-feedback" *ngIf="eventForm.get('detailedAddress.street')?.errors?.['required']">
+              L'avenue est requise
+            </div>
+          </div>
+
+          <!-- City -->
+          <div class="col-md-6 mb-3">
+            <label for="city" class="form-label">Ville *</label>
+            <input 
+              type="text" 
+              class="form-control" 
+              id="city" 
+              formControlName="city"
+              placeholder="Ville"
+              [class.is-invalid]="eventForm.get('detailedAddress.city')?.invalid && eventForm.get('detailedAddress.city')?.touched">
+            <div class="invalid-feedback" *ngIf="eventForm.get('detailedAddress.city')?.errors?.['required']">
+              La ville est requise
+            </div>
+          </div>
+
+          <!-- Governorate -->
+          <div class="col-md-6 mb-3">
+            <label for="governorate" class="form-label">Gouvernorat *</label>
+            <input 
+              type="text" 
+              class="form-control" 
+              id="governorate" 
+              formControlName="governorate"
+              placeholder="Gouvernorat"
+              [class.is-invalid]="eventForm.get('detailedAddress.governorate')?.invalid && eventForm.get('detailedAddress.governorate')?.touched">
+            <div class="invalid-feedback" *ngIf="eventForm.get('detailedAddress.governorate')?.errors?.['required']">
+              Le gouvernorat est requis
+            </div>
+          </div>
+
+          <!-- Zipcode -->
+          <div class="col-md-6 mb-3">
+            <label for="zipcode" class="form-label">Code postal *</label>
+            <input 
+              type="text" 
+              class="form-control" 
+              id="zipcode" 
+              formControlName="zipcode"
+              placeholder="Code postal"
+              [class.is-invalid]="eventForm.get('detailedAddress.zipcode')?.invalid && eventForm.get('detailedAddress.zipcode')?.touched">
+            <div class="invalid-feedback" *ngIf="eventForm.get('detailedAddress.zipcode')?.errors?.['required']">
+              Le code postal est requis
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Buttons -->
+      <div class="col-12">
+        <button type="submit" class="btn btn-primary me-2" [disabled]="eventForm.invalid">
+          Ajouter l'événement
+        </button>
+        <button type="button" class="btn btn-secondary me-2" (click)="onReset()">
+          Réinitialiser
+        </button>
+        <button type="button" class="btn btn-outline-secondary" routerLink="/events">
+          Annuler
+        </button>
+      </div>
+    </div>
+  </form>
+</div>

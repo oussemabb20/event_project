@@ -1,0 +1,13 @@
+<div class="container">
+  <h2>Choisissez un type de produit :</h2>
+  <select [(ngModel)]="selectedProduct" class="form-select" >
+    <option value="">--Sélectionner--</option>
+    <option value="telephone">Téléphone</option>
+    <option value="tv">TV</option>
+  </select>
+
+  <div class="mt-3">
+    <app-telephone *ngIf="selectedProduct === 'telephone'"></app-telephone>
+    <app-tv *ngIf="selectedProduct === 'tv'"></app-tv>
+  </div>
+</div>

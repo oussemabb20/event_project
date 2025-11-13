@@ -1,0 +1,16 @@
+<div  class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="mb-0">Liste des événements</h2>
+    <button class="btn btn-primary" routerLink="/events/add">Proposer un événement</button>
+  </div>
+  <div class="row g-3">
+    <app-card-event appChangeBackground class="col-md-4" *ngFor="let evt of events" [e]="evt" (notif)="likeEvent(evt)" [showButtons]="true">
+    </app-card-event>
+  </div>
+</div>
+<hr>
+
+<div class="container py-4">
+  <!-- Section Meilleurs Événements -->
+  <app-best-event [events]="events"></app-best-event>
+</div>
